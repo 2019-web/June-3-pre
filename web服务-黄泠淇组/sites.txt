@@ -1,0 +1,14 @@
+http://www.nmc.cn/f/rest/weather/58367
+https://apis.map.qq.com/jsapi?qt=geoc&addr=%E4%B8%8A%E6%B5%B7&key=&output=jsonp
+http://www.nmc.cn/f/rest/weather/54511,58367,59493,57516,58321,57679,58847
+https://api.github.com/
+
+https://developer.github.com/v4/
+https://developer.github.com/v3/media/#request-specific-version
+
+
+
+
+
+http://www.nmc.cn/f/rest/real/58367
+http://www.nmc.cn/f/rest/aqi/58367

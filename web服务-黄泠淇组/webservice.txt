@@ -1,0 +1,140 @@
+
+1. procedure call (local)
+2. Internet + RPC
+   IP:PORT + RPC (IDL, Protocol, Bus)
+3. web + RESTful
+   HTTP url method <-> Data and Transaction (more, Resource)
+4. web service
+5. gRPC + dubbo(rpc)
+6. Spring REST + Spring Cloud
+
+
+RESTful:
+用途：资源定位，低耦合（不依赖于数据库，文件管理系统等）
+基于HTTP，HTTP设计上考虑了RESTful接口的设计：
+HTTP method : GET, POST, DELETE, PUT
+url设计 :
+`http://www.nmc.cn/f/rest/real/58367`
+`http://www.nmc.cn/f/rest/real` 404 同时返回一个可读的文本（或者网页）
+`http://www.nmc.cn/f/rest/weather/58367`
+`http://www.nmc.cn/f/rest/weather/54511,58367,59493,57516,58321,57679,58847`;`（灵活的接口设计）
+`http://www.nmc.cn/f/rest/aqi/58367`
+`https://apis.map.qq.com/jsapi?qt=geoc&addr=上海&key=&output=jsonp`
+（地址编码服务）
+`http://www.nmc.cn/f/rest/weather?citycode=58367`
+
+api风格很多，一般大家会把各种风格的api都实现出来。
+`/animals?zoo_id=ID` 或者 `/zoo/ID/animals`
+
+``
+github 的 restful 文档 这个文档的v3某种程度上可以理解为 versioning
+```
+https://developer.github.com/v3/media/#request-specific-version
+```
+
+（api版本的例子）
+```
+curl https://api.github.com/users/technoweenie -I
+HTTP/1.1 200 OK
+X-GitHub-Media-Type: github.v3
+
+curl https://api.github.com/users/technoweenie -I -H "Accept: application/vnd.github.full+json"
+HTTP/1.1 200 OK
+X-GitHub-Media-Type: github.v3; param=full; format=json
+
+curl https://api.github.com/users/technoweenie -I -H "Accept: application/vnd.github.v3.full+json"
+HTTP/1.1 200 OK
+X-GitHub-Media-Type: github.v3; param=full; format=json
+```
+
+表现层的例子（数据类型）
+```
+application/vnd.github.VERSION.raw+json
+application/vnd.github.VERSION.text+json
+application/vnd.github.VERSION.html+json
+
+```
+
+rest 表示 RESTful 接口
+read, weather, aqi 表示实时天气，不精准天气，空气质量指数
+58367 是上海的编号
+然后看看 method, state code 和 body（表示层）
+qq地图的api，使用restful rpc的形式，
+
+可以指定各种数据类型：jsonp，xml，http，jpg，webp。。。
+传输中甚至可以指定压缩方式，可以指定缓存（到期后重置，天气20分种更新一次）
+错误处理：http status code
+信息返回：200，就是返回一个需要的对象，对于404，可能返回一个可读的信息。
+不含状态：通过cookie，restful api的参数，来表示。。
+（利于扩展，高并发，分布式）
+api版本的问题，可以在api中指定，也可以写在http header中，
+limits的问题：。。。上网找把。。
+`....?limit=10,5`
+`sortedby=...`
+
+错误返回结果
+
+缺点：定制化能力差。返回的对象过于复杂，前端系统处理很麻烦。
+GraphQL : 略
+
+
+
+
+
+
+gRPC:
+是否跨语言？
+gRPC是跨语言的（但是语言有限，而且有强耦合，js版本的gRPC还好），
+RMI不是跨语言的（而且IDL就是java语言本身，耦合可以更低）。
+
+IDL, 
+通信协议，
+自动化生成的broker
+
+注册：往往和某个port绑定。
+
+Server/Client:
+Server bind 一个端口，然后client连接这个IP:port然后进行RPC通信。
+
+优点：
+相对于RESTful，和代码贴合更紧密，程序员写代码会舒服点，
+相对于http协议，RPC通常使用更为高效的网络协议，速度更快。
+
+
+缺点：
+但是强耦合（两重意义，相对RESTful的架构耦合，相对语言本身），比如如果使用gRPC，那么就必须直接依赖于gRPC的框架。
+（尽管有这所谓的adapter模式，但是根据KISS原则，代码维护依然有困难。
+可以变成一个问题）
+协议复杂，难以维护，对于gRPC，除了官方自己维护的几种语言支持，几乎没有
+第三方去支持其他语言。
+
+RPC有一个关键步骤，注册，往往都是这种形式"ip:port"部署，即一个port只能
+提供一个服务。而RESTful没有这个问题。
+
+
+如何解决？
+WebService : SOA
+
+dubbo（强耦合，使用RPC）, spring cloud（建议使用，功能更多，耦合更少RESTful）
+provider/consumer
+SOA的3元架构，一个比喻DNS
+
+dubbo 和 Spring 贴合很好，可以使用IoT这些东西，在语言内部的耦合性很低。
+
+Provider/Consumer
+Registry: 发布发现，屏蔽service的传输协议，甚至可以交换协议。
+
+
+再进一小步，就可以变成微服务。。。（初窥微服务）
+再次回忆DNS，欧洲的twitter和美国的twitter
+
+
+
+@SpringBootApplication
+@EnableEurekaServer
+public class Application {
+    public static void main(String[] args) {
+        new SpringApplicationBuilder(Application.class).web(true).run(args);
+    }
+}
+
