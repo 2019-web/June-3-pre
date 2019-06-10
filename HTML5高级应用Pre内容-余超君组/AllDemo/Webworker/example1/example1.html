@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        大数后台计算
+    </title>
+</head>
+<body>
+<div>
+    两大数的最大公倍数和最小公约数为:
+    <p id="result">请稍候,正在计算 </p>
+</div>
+<script>
+    var worker = new Worker('dadicatedworker.js');
+    worker.postMessage({first:34773408000345,second:342374440347320});
+    worker.onmessage = function (event) {
+        document.getElementById('result').textContent = event.data;
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<p id="result"></p>
+</body>
+</html>
+<script type="text/javascript">
+    const id = new Date().toString();
+
+    const myWorker = new SharedWorker('shared.js');
+    myWorker.port.start();
+
+    myWorker.port.onmessage = function(ev) {
+        const { type, id, data } = ev.data;
+        switch(type) {
+            case 'created':
+                document.getElementById('result').textContent = data;
+                break;
+        }
+    };
+
+    myWorker.port.postMessage({
+        id,
+        type: 'start',
+    });
+</script>

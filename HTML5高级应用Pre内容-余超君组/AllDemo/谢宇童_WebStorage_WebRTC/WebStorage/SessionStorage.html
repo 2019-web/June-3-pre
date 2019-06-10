@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SessionStorage</title>
+    <script type="text/javascript">
+        //添加key-value 数据到 sessionStorage
+        sessionStorage.setItem("demokey", "http://code.ybao.org");
+        //通过key来获取value
+        var dt = sessionStorage.getItem("demokey");
+        alert(dt);
+        //清空所有的key-value数据。
+        //sessionStorage.clear();
+        alert(sessionStorage.length);
+    </script>
+</head>
+<body>
+
+</body>
+</html>
